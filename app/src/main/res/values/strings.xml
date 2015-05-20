@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">OpenWeatherMap</string>
+    <string name="title_activity_maps">Map Servise</string>
+    <string name="search_title">search title</string>
+    <string name="search_in_web">Enter city</string>
+    <string name="error_city">Error city</string>
+</resources>
