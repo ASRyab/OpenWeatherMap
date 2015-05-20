@@ -3,9 +3,9 @@ package com.asryab.openweathermap;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,14 +18,11 @@ import android.widget.TextView;
 
 import com.asryab.openweathermap.data.CurrentWeather;
 import com.asryab.openweathermap.utils.MeteoStation;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -43,6 +40,7 @@ public class MapsActivity extends ActionBarActivity implements MeteoStation.Mete
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private Toolbar mToolbar;
     private CurrentWeather currentWeather=null;
+    private TextView mText;
     private ResultReceiver resultReceiver = new ResultReceiver(new Handler()) {
         protected void onReceiveResult(int resultCode, Bundle resultData) {
                 if (resultCode==RESULT_CODE_OK){
@@ -56,7 +54,23 @@ public class MapsActivity extends ActionBarActivity implements MeteoStation.Mete
                 }
         }
     };
-    private TextView mText;
+
+    public static void initImageLoader(Context context) {
+        // This configuration tuning is custom. You can tune every option, you may tune some of them,
+        // or you can create default configuration by
+        //  ImageLoaderConfiguration.createDefault(this);
+        // method.
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
+                .threadPriority(Thread.NORM_PRIORITY - 2)
+                .denyCacheImageMultipleSizesInMemory()
+                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                .diskCacheSize(50 * 1024 * 1024) // 50 Mb
+                .tasksProcessingOrder(QueueProcessingType.LIFO)
+                .writeDebugLogs() // Remove for release app
+                .build();
+        // Initialize ImageLoader with configuration.
+        ImageLoader.getInstance().init(config);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +136,6 @@ public class MapsActivity extends ActionBarActivity implements MeteoStation.Mete
 
     }
 
-
     /**
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
      * installed) and the map has not already been instantiated.. This will ensure that we only ever
@@ -176,11 +189,8 @@ public class MapsActivity extends ActionBarActivity implements MeteoStation.Mete
                     mMap.addMarker(markerOptions);
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
 
-                    // Do whatever you want with Bitmap
                 }
             });
-//            markerOptions.icon(
-//                    BitmapDescriptorFactory.fromBitmap(bitmap));
 
 
         }
@@ -193,22 +203,6 @@ public class MapsActivity extends ActionBarActivity implements MeteoStation.Mete
 
     @Override
     public void onFail(Exception e) {
-        Log.d(LOG_TAG,"fail");
-    }
-    public static void initImageLoader(Context context) {
-        // This configuration tuning is custom. You can tune every option, you may tune some of them,
-        // or you can create default configuration by
-        //  ImageLoaderConfiguration.createDefault(this);
-        // method.
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-                .threadPriority(Thread.NORM_PRIORITY - 2)
-                .denyCacheImageMultipleSizesInMemory()
-                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
-                .diskCacheSize(50 * 1024 * 1024) // 50 Mb
-                .tasksProcessingOrder(QueueProcessingType.LIFO)
-                .writeDebugLogs() // Remove for release app
-                .build();
-        // Initialize ImageLoader with configuration.
-        ImageLoader.getInstance().init(config);
+        Log.d(LOG_TAG, "fail");
     }
 }

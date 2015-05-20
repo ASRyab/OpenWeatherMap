@@ -2,21 +2,16 @@ package com.asryab.openweathermap.utils;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.asryab.openweathermap.data.Coords;
 import com.asryab.openweathermap.data.CurrentWeather;
-import com.asryab.openweathermap.data.ForecastDay;
-import com.asryab.openweathermap.data.ForecastWeather;
 import com.asryab.openweathermap.data.MainParameters;
 import com.asryab.openweathermap.data.StateParameters;
 import com.asryab.openweathermap.data.WindParameters;
 import com.asryab.openweathermap.des.CoordsDes;
 import com.asryab.openweathermap.des.CurrentWeatherDes;
-import com.asryab.openweathermap.des.ForecastDayDes;
-import com.asryab.openweathermap.des.ForecastWeatherDes;
 import com.asryab.openweathermap.des.MainParametersDes;
 import com.asryab.openweathermap.des.StateParametersDes;
 import com.asryab.openweathermap.des.WindParametersDes;
@@ -27,16 +22,14 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-
 import java.io.IOException;
 
 public class MeteoStation {
     private static final String AUTHORITY = "api.openweathermap.org";
-
-    private static final Uri CURRENT = new Uri.Builder().scheme("http").authority(AUTHORITY)
-            .appendPath("data").appendPath("2.5").appendPath("weather").build();
     public static final Uri ICON_LOAD = new Uri.Builder().scheme("http").authority(AUTHORITY)
             .appendPath("img").appendPath("w").build();
+    private static final Uri CURRENT = new Uri.Builder().scheme("http").authority(AUTHORITY)
+            .appendPath("data").appendPath("2.5").appendPath("weather").build();
     private static final String LOG_TAG = MeteoStation.class.getName();
 
     private static MeteoStation sInstance;
@@ -52,8 +45,6 @@ public class MeteoStation {
                 .registerTypeAdapter(StateParameters.class, new StateParametersDes())
                 .registerTypeAdapter(WindParameters.class, new WindParametersDes())
                 .registerTypeAdapter(CurrentWeather.class, new CurrentWeatherDes())
-                .registerTypeAdapter(ForecastDay.class, new ForecastDayDes())
-                .registerTypeAdapter(ForecastWeather.class, new ForecastWeatherDes())
                 .create();
     }
 
